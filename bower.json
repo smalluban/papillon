@@ -1,0 +1,28 @@
+{
+  "name": "papillon",
+  "version": "1.0.0",
+  "homepage": "https://github.com/smalluban/papillon",
+  "authors": [
+    "Dominik Lubański <dominik.lubanski@gmail.com>"
+  ],
+  "description": "Change detection library",
+  "main": "papillon-umd.js",
+  "moduleType": [
+    "amd",
+    "es6",
+    "globals"
+  ],
+  "keywords": [
+    "change detection",
+    "data binding",
+    "papillon"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

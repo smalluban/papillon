@@ -1,0 +1,43 @@
+{
+  "name": "papillon",
+  "version": "1.0.0",
+  "description": "Change detection library",
+  "main": "papillon-umd.js",
+  "scripts": {
+    "test": "./node_modules/karma/bin/karma start --single-run",
+    "coverage": "rm -rf ./coverage/* && ./node_modules/karma/bin/karma start ./karma-cov.conf.js --single-run",
+    "develop": "./node_modules/karma/bin/karma start",
+    "build": "browserify -s papillon -d -e papillon.js -t babelify -t uglifyify | exorcist ./papillon-umd.js.map > ./papillon-umd.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/smalluban/papillon"
+  },
+  "keywords": [
+    "change detection",
+    "data binding",
+    "papillon"
+  ],
+  "author": "Dominik Lubański <dominik.lubanski@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/smalluban/papillon/issues"
+  },
+  "homepage": "https://github.com/smalluban/papillon",
+  "devDependencies": {
+    "babelify": "^5.0.4",
+    "browserify": "^9.0.3",
+    "browserify-istanbul": "^0.2.1",
+    "exorcist": "^0.1.6",
+    "isparta": "^3.0.3",
+    "istanbulify": "^0.1.0",
+    "jasmine-core": "^2.2.0",
+    "karma": "^0.12.31",
+    "karma-browserify": "^4.0.0",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-coverage": "0.2.6",
+    "karma-firefox-launcher": "^0.1.4",
+    "karma-jasmine": "^0.3.5",
+    "uglifyify": "^3.0.1"
+  }
+}
