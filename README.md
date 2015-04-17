@@ -1,5 +1,7 @@
 # papillon
 
+[![Build Status](https://travis-ci.org/smalluban/papillon.svg?branch=master)](https://travis-ci.org/smalluban/papillon)
+
 Papillon is a change detection library.
 
 Library uses the fact that data changes in browser context can not be provided
