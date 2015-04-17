@@ -15,10 +15,10 @@ module.exports = function(config) {
         defaultIgnore: false
       }]]
     },
-    reporters: ['coverage'],
+    reporters: ['coverage', 'coveralls'],
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      type: 'lcov', // lcov or lcovonly are required for generating lcov.info files
+      dir: 'coverage/'
     },
     port: 9876,
     colors: true,
