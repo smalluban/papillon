@@ -1,6 +1,7 @@
 # papillon
 
 [![Build Status](https://travis-ci.org/smalluban/papillon.svg?branch=master)](https://travis-ci.org/smalluban/papillon)
+[![Coverage Status](https://coveralls.io/repos/smalluban/papillon/badge.svg?branch=master)](https://coveralls.io/r/smalluban/papillon?branch=master)
 
 Papillon is a change detection library.
 
