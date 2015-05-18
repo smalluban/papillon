@@ -1,32 +1,33 @@
-# papillon
+# Papillon
 
 [![Build Status](https://travis-ci.org/smalluban/papillon.svg?branch=master)](https://travis-ci.org/smalluban/papillon)
 [![Coverage Status](https://coveralls.io/repos/smalluban/papillon/badge.svg?branch=master)](https://coveralls.io/r/smalluban/papillon?branch=master)
 
 Papillon is a change detection library.
 
-Library uses the fact that data changes in browser context can not be provided
-more often then browser refresh frequency. Instead watching every single change,
-library creates frozen states of objects between repaints and provides
-the difference between these states.
+The library is using the fact, that changes of data in the context of the browser,
+cannot be provided more often than the refresh rate of the browser.
 
-## getting started
+Instead of watching every change, the library creates a frozen states of objects
+between repaints and provides the difference between these states.
+
+## Getting started
 
 ```bash
 npm install papillon
 bower install papillon
 ```
 
-Packages point to compiled version of the library. They work with all major
+Packages contain built version of the library. They work with all major
 package managers and global browser context.
 
 ```javascript
 // load library (for example with browserify)
-var papillon = require('papillon');
+let papillon = require('papillon');
 
 // load modules (works also in global context)
-var Observer = papillon.Observer;
-var State = papillon.State;
+let Observer = papillon.Observer;
+let State = papillon.State;
 ```
 
 If you use ES6, import project and load source file instead:
@@ -36,27 +37,26 @@ import { Observer, State } from 'papillon/papillon';
 ```
 <!-- Start src/state.js -->
 
-## state
+## State
 
-This module provides singleton interface for storing objects states.
-Only last state is cached and last changes between checks are provided.
+This module provides an singleton interface for storing state of object.
+Only last state and changes between this and the previous state are stored.
 
-Singleton pattern ensures low memory usage and consistent state between
-objects that reference to themselves. Checking two objects that reference
-to third one will check the third only once.
+Singleton pattern ensures low memory usage and consistent states
+for objects that reference to themselves.
 
-Module uses a special state counter that increase only before next
-repaint. Checking object state multiply times before counter is changed
-will return the same results.
+Module uses a state counter that increase only before next
+repaint. Checking state multiply times before counter is changed,
+yields the same results.
 
-### instance properties
+### Instance properties
 
-* `state.target` - reference to object, which state is stored.
-* `state.lastCheck` - value of state counter when object was checked
-* `state.lastChange` - value of state counter when object has changed
-* `state.changelog` - list of changes from last check
+* `state.target` - reference to object, which state is stored
+* `state.lastCheck` - value of state counter when `target` was checked
+* `state.lastChange` - value of state counter when `target` has changed
+* `state.changelog` - list of changes between previous and current state
 
-### changelog structure
+### Changelog property structure
 
 ```javascript
 {
@@ -67,17 +67,15 @@ will return the same results.
 }
 ```
 
-#### record types
-
-* `add` - define property, ex. `obj.asd = 'value'`
+* `add` - define new property, ex. `obj.asd = 'value'`
 * `update` - change reference or change primitive value
 * `delete` - remove property
-* `modify` - nested changes in `Object` property, contains object changelog
+* `modify` - nested changes in `Object` property, contains object `changelog`
 
-### constructor
+### Constructor
 
 ```javascript
-var state = new State({ one: 'two' });
+let state = new State({ one: 'two' });
 ```
 
 #### params:
@@ -93,16 +91,16 @@ If it is true, method regenerates `changelog`.
 
 <!-- Start src/observer.js -->
 
-## observer
+## Observer
 
-This module provides interface to link callback method with object's properties
-changes. Watched properties are redefined as getter/setter property.
-Module will throw error for non-configurable properties.
+This module connects object `state` changes with callback action.
+Callback method is called with `changelog` state property.
 
-Getting or setting watched property will trigger request for change detection
-which will be executed before next repaint.
+Observed property is redefined as getter/setter.  Getting or setting
+that property will trigger request for `state` change detection
+before next repaint.
 
-### constructor
+### Constructor
 
 ```javascript
 let host = {test: 'one'};
@@ -117,31 +115,30 @@ host.test = 'two';
 #### params:
 
 * **Object** *host object*
-* **String | Array&lt;String&gt;** *properties*
+* **String | Array&lt;String&gt;** *properties* - one or more properties
 * **Function** *callback* - takes `changelog` object as argument
 
 ### observer.check()
 
 Schedule change detection with `window.requestAnimationFrame`.
 
-This method is automatically called when watched property is set or get.
-You don't have to use this method directly. If your code changes
-host properties by other reference, you have to schedule checking manually.
+This method is called when the observed property is set or get.
+You do not have to use this method directly. If your code changes
+object by other reference then observed property, you have to schedule
+checking manually.
 
 ### observer.destroy()
 
-Cancel scheduled checking request and revert watched properties to
-original definition.
+Cancel scheduled checking request and revert observed properties to
+original definition. If your code do not requires object with original
+definition of observed properties you do not have to call this method.
 
-If your code not requires host object with state before loading
-observer, you don't have to call this method.
-
-After destroying Observer instance, accessing host properties will not
+After destroying `Observer` instance, accessing properties will not
 trigger `check()` method.
 
 <!-- End src/observer.js -->
 
-## contribution
+## Contribution
 
 Feel free to contribute project. Fork repository, clone and run:
 
@@ -152,6 +149,6 @@ npm install && npm run develop
 Write some code, provide proper tests and pull request to this
 repository.
 
-## license
+## License
 
 Papillon is released under the MIT License.
