@@ -3,9 +3,9 @@
 [![Build Status](https://travis-ci.org/smalluban/papillon.svg?branch=master)](https://travis-ci.org/smalluban/papillon)
 [![Coverage Status](https://coveralls.io/repos/smalluban/papillon/badge.svg?branch=master)](https://coveralls.io/r/smalluban/papillon?branch=master)
 
-Papillon is a change detection library.
+Papillon is a smart change detection library.
 
-The library is using the fact, that changes of data in the context of the browser,
+The library is using the fact, that changes of data in the context of the browser
 cannot be provided more often than the refresh rate of the browser.
 
 Instead of watching every change, the library creates a frozen states of objects
@@ -30,12 +30,11 @@ let Observer = papillon.Observer;
 let State = papillon.State;
 ```
 
-If you use ES6, import project and load source file instead:
+If you use ES6 load source file:
 
 ```javascript
 import { Observer, State } from 'papillon/papillon';
 ```
-<!-- Start src/state.js -->
 
 ## State
 
@@ -46,17 +45,39 @@ Singleton pattern ensures low memory usage and consistent states
 for objects that reference to themselves.
 
 Module uses a state counter that increase only before next
-repaint. Checking state multiply times before counter is changed,
+repaint. Checking state multiply times before counter is changed
 yields the same results.
 
-### Instance properties
+### Static methods
+
+#### State.now()
+
+```
+let statestamp = State.now()
+```
+
+Returns the current value of the state counter.
+
+### Instance
+
+#### Constructor
+
+```javascript
+let state = new State({ one: 'two' });
+```
+
+Params:
+
+* **Object** *target object*
+
+#### Properties
 
 * `state.target` - reference to object, which state is stored
 * `state.lastCheck` - value of state counter when `target` was checked
 * `state.lastChange` - value of state counter when `target` has changed
 * `state.changelog` - list of changes between previous and current state
 
-### Changelog property structure
+#### state.changelog
 
 ```javascript
 {
@@ -67,40 +88,26 @@ yields the same results.
 }
 ```
 
-* `add` - define new property, ex. `obj.asd = 'value'`
-* `update` - change reference or change primitive value
+* `add` - definition of new property
+* `update` - changed reference or changed primitive value
 * `delete` - remove property
 * `modify` - nested changes in `Object` property, contains object `changelog`
 
-### Constructor
-
-```javascript
-let state = new State({ one: 'two' });
-```
-
-#### params:
-
-* **Object** *target object*
-
-### state.isChanged()
+#### state.isChanged()
 
 Checks if target object has changed from last state.
 If it is true, method regenerates `changelog`.
 
-<!-- End src/state.js -->
-
-<!-- Start src/observer.js -->
-
 ## Observer
 
-This module connects object `state` changes with callback action.
+This module connects changes of observed object properties with callback action.
 Callback method is called with `changelog` state property.
 
-Observed property is redefined as getter/setter.  Getting or setting
+Observed property is redefined as getter/setter. Getting or setting
 that property will trigger request for `state` change detection
 before next repaint.
 
-### Constructor
+#### Constructor
 
 ```javascript
 let host = {test: 'one'};
@@ -112,13 +119,13 @@ let observer = new Observer(host, 'test', changelog => {
 host.test = 'two';
 ```
 
-#### params:
+Params:
 
 * **Object** *host object*
 * **String | Array&lt;String&gt;** *properties* - one or more properties
 * **Function** *callback* - takes `changelog` object as argument
 
-### observer.check()
+#### observer.check()
 
 Schedule change detection with `window.requestAnimationFrame`.
 
@@ -127,7 +134,7 @@ You do not have to use this method directly. If your code changes
 object by other reference then observed property, you have to schedule
 checking manually.
 
-### observer.destroy()
+#### observer.destroy()
 
 Cancel scheduled checking request and revert observed properties to
 original definition. If your code do not requires object with original
@@ -135,8 +142,6 @@ definition of observed properties you do not have to call this method.
 
 After destroying `Observer` instance, accessing properties will not
 trigger `check()` method.
-
-<!-- End src/observer.js -->
 
 ## Contribution
 
