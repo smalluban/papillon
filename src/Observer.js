@@ -1,4 +1,4 @@
-import State from './state';
+import State from './State';
 import PropertyObserver from './PropertyObserver';
 
 export default class Observer {
