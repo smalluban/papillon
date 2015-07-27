@@ -1,12 +1,13 @@
-import Observer from '../src/observer';
+import { Observer } from '../papillon';
 
 describe('Observer', ()=>{
+
   describe('constructor', ()=> {
     it('throw error for invalid arguments', ()=> {
-      expect(Observer).toThrow();
-      expect(Observer.bind(null, {})).toThrow();
-      expect(Observer.bind(null, {}, 'one'));
-      expect(Observer.bind(null, undefined, 'one', ()=> {}));
+      expect(()=> new Observer()).toThrow();
+      expect(()=> new Observer({})).toThrow();
+      expect(()=> new Observer({}, 'one')).toThrow();
+      expect(()=> new Observer(undefined, 'one', ()=> {})).toThrow();
     });
 
     it('throw error for non-configurable properties', ()=> {
@@ -14,35 +15,11 @@ describe('Observer', ()=>{
       Object.defineProperty(host, 'one', {
         value: 'test'
       });
-      let test = ()=> {
-        new Observer(host, 'one', ()=> {});
-      };
-      expect(test).toThrow();
+      expect(()=> new Observer(host, 'one', ()=> {})).toThrow();
     });
   });
 
-  it('create property descriptor', ()=> {
-    let observer = new Observer({one: 'one'}, 'one', ()=>{});
-    expect(observer.properties[0].property).toEqual('one');
-    expect(observer.properties[0].descriptor).toBeDefined();
-  });
-
-  it('create getter/setter descriptor', ()=> {
-    let host = {};
-    let getter = ()=> {};
-    Object.defineProperty(host, 'some', {
-      configurable: true,
-      get: getter,
-      set: getter
-    });
-    let observer = new Observer(host, 'some', ()=> {});
-
-    expect(observer.properties[0].property).toEqual('some');
-    expect(observer.properties[0].descriptor.get).toEqual(getter);
-    expect(observer.properties[0].descriptor.set).toEqual(getter);
-  });
-
-  describe('reflect changes with host object', ()=> {
+  describe('observe changes with host object', ()=> {
     let host, list, value;
 
     beforeEach(()=> {
@@ -137,7 +114,7 @@ describe('Observer', ()=>{
       observer = new Observer(host, ['one', 'two'], spy);
     });
 
-    it('revert property to oryginal definition', ()=> {
+    it('revert property to original definition', ()=> {
       let desc = Object.getOwnPropertyDescriptor(host, 'one');
       expect(desc.get).toBeDefined();
       observer.destroy();
@@ -166,5 +143,36 @@ describe('Observer', ()=>{
       });
     });
 
+  });
+
+  describe('with multiply instances', ()=> {
+    let host, spy, observer1, observer2;
+
+    beforeEach(()=> {
+      host = { one: 'two' };
+      spy = jasmine.createSpy('callback');
+      observer1 = new Observer(host, 'one', ()=> {});
+      observer2 = new Observer(host, 'one', spy);
+    });
+
+    it('work after destroying one of them', (done)=> {
+      observer1.destroy();
+      host.one = 'three';
+      window.requestAnimationFrame(()=> {
+        expect(spy).toHaveBeenCalled();
+        done();
+      });
+    });
+
+    it('revert to original state before observing', ()=> {
+      observer1.destroy();
+      observer2.destroy();
+      expect(Object.getOwnPropertyDescriptor(host, 'one')).toEqual({
+        writable: true,
+        enumerable: true,
+        configurable: true,
+        value: 'two'
+      });
+    });
   });
 });

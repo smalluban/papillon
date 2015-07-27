@@ -1,4 +1,4 @@
-import State from '../src/state';
+import { State } from '../papillon';
 
 describe('State', ()=> {
   describe('`now` static method', ()=> {

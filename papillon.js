@@ -1,5 +1,5 @@
-import State from './src/state';
-import Observer from './src/observer';
+import State from './src/State';
+import Observer from './src/Observer';
 
 export {
   State,

@@ -1,57 +1,24 @@
 import State from './state';
+import PropertyObserver from './PropertyObserver';
 
 export default class Observer {
-  constructor(host, properties, callback) {
-    if (!host || !properties || !callback) {
+  constructor(host, keys, callback) {
+    if (!host || !keys || !callback) {
       throw new TypeError('Invalid arguments');
     }
 
-    this.host = host;
     this.callback = callback;
-
-    this.properties = [].concat(properties).map((property)=> {
-      let descriptor = Object.getOwnPropertyDescriptor(this.host, property);
-
-      if (!descriptor.configurable) {
-        throw new TypeError(`'${property}': Configurable property required`);
-      }
-
-      return { property, descriptor };
-    });
+    this.revert = [];
 
     this.state = new State(
-      this.properties.reduce( (list, {property, descriptor}) => {
-        let getter, setter;
+      [].concat(keys).reduce( (list, key) => {
+        let observer = new PropertyObserver(host, key);
+        list[key] = host[key];
 
-        list[property] = this.host[property];
-
-        if (descriptor.get) {
-          getter = ()=> list[property] = descriptor.get.call(this.host);
-        } else {
-          getter = ()=> list[property];
-        }
-
-        if (descriptor.set) {
-          setter = (value)=> {
-            descriptor.set.call(this.host, value);
-            getter();
-          };
-        } else {
-          setter = (value)=> list[property] = value;
-        }
-
-        Object.defineProperty(this.host, property, {
-          configurable: true,
-          enumerable: descriptor.enumerable,
-          get: ()=> {
-            this.check();
-            return getter();
-          },
-          set: (value)=> {
-            setter(value);
-            this.check();
-          }
-        });
+        this.revert.push(observer.observe((value)=> {
+          list[key] = value;
+          this.check();
+        }));
 
         return list;
       }, {})
@@ -76,12 +43,6 @@ export default class Observer {
     if (this.requestId) {
       window.cancelAnimationFrame(this.requestId);
     }
-
-    this.properties.forEach(({property, descriptor}) => {
-      if (!descriptor.get && !descriptor.set) {
-        descriptor.value = this.state.target[property];
-      }
-      Object.defineProperty(this.host, property, descriptor);
-    });
+    this.revert.forEach(cb => cb());
   }
 }
