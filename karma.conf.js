@@ -1,17 +1,21 @@
 module.exports = function(config) {
   config.set({
     basePath: '',
-    frameworks: ['browserify','jasmine'],
+    frameworks: ['jasmine'],
     files: [
       { pattern: 'test/**/*.js', watched: false }
     ],
     exclude: [],
     preprocessors: {
-      'test/**/*.js': ['browserify']
+      'test/**/*.js': ['webpack']
     },
-    browserify: {
-      debug: true,
-      transform: ['babelify']
+    webpack: {
+      module: {
+        loaders: [
+          { test: /\.js$/, loader: 'babel' }
+        ]
+      },
+      devtool: "#inline-source-map"
     },
     reporters: ['progress'],
     port: 9876,

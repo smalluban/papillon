@@ -1,12 +1,12 @@
 {
   "name": "papillon",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "homepage": "https://github.com/smalluban/papillon",
   "authors": [
     "Dominik Lubański <dominik.lubanski@gmail.com>"
   ],
   "description": "Change detection library",
-  "main": "papillon-umd.js",
+  "main": "dist/papillon-umd.js",
   "moduleType": [
     "amd",
     "es6",
