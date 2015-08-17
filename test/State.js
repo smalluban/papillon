@@ -75,18 +75,18 @@ describe('State', ()=> {
         });
       });
 
-      it('contains `add` type for primitive value', (done)=> {
+      it('contains `set` type for primitive value', (done)=> {
         window.requestAnimationFrame(()=> {
           obj.one = 'one';
           expect(state.isChanged()).toEqual(true);
           expect(state.changelog).toEqual({
-            one: { type: 'add' }
+            one: { type: 'set' }
           });
           done();
         });
       });
 
-      it('contains `add` type for object value', (done)=> {
+      it('contains `set` type for object value', (done)=> {
         let obj = {}, state = new State(obj);
 
         window.requestAnimationFrame(()=> {
@@ -94,7 +94,7 @@ describe('State', ()=> {
 
           expect(state.isChanged()).toEqual(true);
           expect(state.changelog).toEqual({
-            one: { type: 'add' }
+            one: { type: 'set' }
           });
           done();
         });
@@ -108,7 +108,7 @@ describe('State', ()=> {
           expect(state.isChanged()).toEqual(true);
           expect(state.changelog).toEqual({
             one: { type: 'modify', changelog: {
-              two: { type: 'update', oldValue: null }
+              two: { type: 'set', oldValue: null }
             } }
           });
           done();

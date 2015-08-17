@@ -81,17 +81,16 @@ Params:
 
 ```javascript
 {
- one: { type: 'add' },
- two: { type: 'update', oldValue: 'some'},
+ one: { type: 'set' },
+ two: { type: 'set', oldValue: 'some'},
  three: { type: 'delete', oldValue: 'before removed'},
  four: { type: 'modify', changelog: {...} }
 }
 ```
 
-* `add` - definition of new property
-* `update` - changed reference or changed primitive value
-* `delete` - remove property
-* `modify` - nested changes in `Object` property, contains object `changelog`
+* `set` - set or changed reference or changed primitive value
+* `delete` - deleted property
+* `modify` - nested changes of `Object` property in `changelog`
 
 #### state.isChanged()
 

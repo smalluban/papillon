@@ -49,7 +49,7 @@ describe('Observer', ()=>{
   });
 
   describe('check method', ()=> {
-    let host, observer, spy;
+    let host, observer;
 
     beforeEach(()=> {
       host = { one: 'two' };
@@ -58,9 +58,9 @@ describe('Observer', ()=>{
     });
 
     it('called when getting watched property', ()=> {
-      let temp = host.one;
+      host.one;
       expect(observer.check).toHaveBeenCalled();
-    })
+    });
   });
 
   describe('callback', ()=> {
@@ -84,7 +84,7 @@ describe('Observer', ()=>{
       host.one = 'new value';
       window.requestAnimationFrame(()=> {
         expect(spy).toHaveBeenCalledWith({
-          one: { type: 'update', oldValue: 'two' }
+          one: { type: 'set', oldValue: 'two' }
         });
         done();
       });

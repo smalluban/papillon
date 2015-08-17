@@ -70,10 +70,10 @@ export default class State {
         let value = this.target[key];
 
         if (!this.cache.hasOwnProperty(key)) {
-          this.changelog[key] = { type:'add' };
+          this.changelog[key] = { type:'set' };
           changed = true;
         } else if (!State.is(value, this.cache[key])) {
-          this.changelog[key] = this.changelog[key] || { type: 'update'};
+          this.changelog[key] = this.changelog[key] || { type: 'set'};
           this.changelog[key].oldValue = this.cache[key];
           changed = true;
         }
