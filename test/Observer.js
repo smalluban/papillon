@@ -52,13 +52,37 @@ describe('Observer', ()=>{
     let host, observer;
 
     beforeEach(()=> {
-      host = { one: 'two' };
-      observer = new Observer(host, 'one', ()=> {});
+      host = { one: 'two', two: {} };
+      Object.defineProperty(host, 'three', {
+        get: ()=> Math.random(),
+        configurable: true
+      });
+      observer = new Observer(host, ['one', 'two', 'three'], ()=> {});
       spyOn(observer, 'check');
     });
 
-    it('called when getting watched property', ()=> {
+    it('is called when setting new value', ()=> {
+      host.one = 'new value';
+      expect(observer.check).toHaveBeenCalled();
+    });
+
+    it('is not called when getting primitive watched property', ()=> {
       host.one;
+      expect(observer.check).not.toHaveBeenCalled();
+    });
+
+    it('is called when getting object watched property', ()=> {
+      host.two;
+      expect(observer.check).toHaveBeenCalled();
+    });
+
+    it('is called for computed property with return new value', ()=> {
+      host.three = 'new value';
+      expect(observer.check).toHaveBeenCalled();
+    });
+
+    it('is called for computed property with return new value', ()=> {
+      host.three;
       expect(observer.check).toHaveBeenCalled();
     });
   });

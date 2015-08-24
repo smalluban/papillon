@@ -16,8 +16,12 @@ export default class Observer {
         list[key] = host[key];
 
         this.revert.push(observer.observe((value)=> {
-          list[key] = value;
-          this.check();
+          if (!State.is(list[key], value)) {
+            list[key] = value;
+            this.check();
+          } else if (State.isObject(value)) {
+            this.check();
+          }
         }));
 
         return list;
