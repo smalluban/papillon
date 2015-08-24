@@ -6,7 +6,7 @@ module.exports = {
     path: "./dist/",
     libraryTarget: "umd",
     library: "papillon",
-    filename: "papillon-umd.js"
+    filename: "papillon.js"
   },
   module: {
     loaders: [

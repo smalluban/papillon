@@ -1,8 +1,8 @@
 {
   "name": "papillon",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Change detection library",
-  "main": "dist/papillon-umd.js",
+  "main": "dist/papillon.js",
   "scripts": {
     "test": "./node_modules/karma/bin/karma start --single-run",
     "develop": "./node_modules/karma/bin/karma start --browsers Chrome",
