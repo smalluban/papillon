@@ -16,16 +16,6 @@ describe('PropertyProxy', ()=> {
     expect(spy).toHaveBeenCalledWith("new content");
   });
 
-  it('throw for not writable property', ()=> {
-    let parent = {}, child = Object.create(parent);
-    Object.defineProperty(parent, 'test', {
-      value: 'one'
-    });
-
-    expect(()=> new PropertyProxy(parent, 'test', spy).on()).toThrow();
-    expect(()=> new PropertyProxy(child, 'test', spy).on()).toThrow();
-  });
-
   it('replace value from prototype as native does', ()=> {
     let parent = { test: 'one'};
     let child = Object.create(parent);

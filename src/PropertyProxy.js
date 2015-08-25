@@ -36,11 +36,6 @@ class PropertyProxy {
     }
 
     if (desc) {
-      if (!desc.configurable) {
-        throw new TypeError(
-          `Cannot create proxy for not configurable property '${this.key}'`);
-      }
-
       if (!desc.get && !desc.set) {
         desc.get = ()=> {
           delete this.host[this.key];
