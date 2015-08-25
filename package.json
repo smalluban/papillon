@@ -1,6 +1,6 @@
 {
   "name": "papillon",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Change detection library",
   "main": "dist/papillon.js",
   "scripts": {
