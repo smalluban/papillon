@@ -3,6 +3,7 @@ module.exports = function(config) {
     basePath: '',
     frameworks: ['jasmine'],
     files: [
+      'node_modules/core-js/client/core.js',
       { pattern: 'test/**/*.js', watched: false }
     ],
     exclude: [],
@@ -22,7 +23,7 @@ module.exports = function(config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Firefox'],
+    browsers: ['Chrome'],
     singleRun: false
   });
 };

@@ -4,9 +4,11 @@
   "description": "Change detection library",
   "main": "dist/papillon.js",
   "scripts": {
-    "test": "./node_modules/karma/bin/karma start --single-run",
-    "develop": "./node_modules/karma/bin/karma start --browsers Chrome",
-    "build": "webpack"
+    "test": "./node_modules/karma/bin/karma start --single-run --browsers Firefox",
+    "develop": "./node_modules/karma/bin/karma start",
+    "build": "webpack",
+    "prebuild": "npm test",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -26,11 +28,14 @@
   "devDependencies": {
     "babel-core": "^5.8.22",
     "babel-loader": "^5.3.2",
+    "core-js": "^1.1.1",
     "jasmine-core": "^2.2.0",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
     "karma-firefox-launcher": "^0.1.4",
+    "karma-ievms": "^0.1.0",
     "karma-jasmine": "^0.3.5",
+    "karma-safari-launcher": "^0.1.1",
     "karma-webpack": "^1.7.0",
     "webpack": "^1.11.0"
   }
