@@ -1,4 +1,4 @@
-let map = new WeakMap();
+const map = new WeakMap();
 let timestamp = 0;
 let request = false;
 

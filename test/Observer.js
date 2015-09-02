@@ -1,4 +1,5 @@
 import { Observer } from '../papillon';
+import { State } from '../papillon';
 
 describe('Observer', ()=>{
 
@@ -198,5 +199,29 @@ describe('Observer', ()=>{
         value: 'two'
       });
     });
+  });
+
+  describe('nested observers', ()=> {
+
+    it('callback in the same animation frame',(done)=> {
+      let frame1, frame2;
+      const host = {};
+
+      const observer1 = new Observer(host, 'test1', ()=> {
+        frame1 = State.now();
+        expect(frame1).toEqual(frame2);
+        done();
+      });
+
+      const observer2 = new Observer(host, 'test2', ()=> {
+        frame2 = State.now();
+        host.test1 = 'new value';
+      });
+
+      host.test2 = 'new value';
+
+    });
+
+
   });
 });

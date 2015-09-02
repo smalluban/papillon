@@ -1,7 +1,27 @@
 import State from './State';
 import PropertyObserver from './PropertyObserver';
 
-export default class Observer {
+class Observer {
+  static requestAnimationFrame(cb) {
+    if (!this._request) {
+      this._callbacks = new Set([cb]);
+      this._request = window.requestAnimationFrame(()=> {
+        this._callbacks.forEach(cb => cb());
+        this._request = this._callbacks = undefined;
+      });
+    } else {
+      this._callbacks.add(cb);
+    }
+
+    return cb;
+  }
+
+  static cancelAnimationFrame(cb) {
+    if (this._callbacks) {
+      this._callbacks.delete(cb);
+    }
+  }
+
   constructor(host, keys, callback) {
     if (!host || !keys || !callback) {
       throw new TypeError('Invalid arguments');
@@ -30,23 +50,24 @@ export default class Observer {
   }
 
   check() {
-    if (!this.requestId && !this.checking) {
-      this.requestId = window.requestAnimationFrame(()=> {
-        this.checking = true;
-
+    if (!this.checkFn) {
+      this.checkFn = Observer.requestAnimationFrame(()=> {
         if (this.state.isChanged()) {
           this.callback(this.state.changelog);
         }
 
-        this.checking = this.requestId = void 0;
+        this.checkFn = undefined;
       });
     }
   }
 
   destroy() {
-    if (this.requestId) {
-      window.cancelAnimationFrame(this.requestId);
+    if (this.checkFn) {
+      Observer.cancelAnimationFrame(this.checkFn);
     }
+
     this.revert.forEach(cb => cb());
   }
 }
+
+export default Observer;
