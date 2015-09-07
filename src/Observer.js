@@ -4,7 +4,7 @@ import PropertyObserver from './PropertyObserver';
 class Observer {
   static requestAnimationFrame(cb) {
     if (!this._request) {
-      this._callbacks = new Set([cb]);
+      this._callbacks = new Set().add(cb);
       this._request = window.requestAnimationFrame(()=> {
         this._callbacks.forEach(cb => cb());
         this._request = this._callbacks = undefined;
