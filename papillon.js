@@ -1,7 +1,3 @@
-import State from './src/State';
-import Observer from './src/Observer';
+export { default as State } from './src/State';
+export { default as Observer } from './src/Observer';
 
-export {
-  State,
-  Observer
-};
