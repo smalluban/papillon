@@ -81,16 +81,20 @@ Params:
 
 ```javascript
 {
- one: { type: 'set' },
+ one: { type: 'set', oldKey: 'five' },
  two: { type: 'set', oldValue: 'some'},
  three: { type: 'delete', oldValue: 'before removed'},
  four: { type: 'modify', changelog: {...} }
 }
 ```
 
-* `set` - set or changed reference or changed primitive value
-* `delete` - deleted property
-* `modify` - nested changes of `Object` property in `changelog`
+* `set` - Set reference or primitive value.
+* `delete` - Deleted property.
+* `modify` - Nested changes of `Object` property in `changelog`.
+* `oldValue` - Property value from last state.
+* `oldKey` - Property key from last state which value was moved to this property. 
+    Paremeter is set only when new value of old property has changed. In another 
+    words, it is set only for _relocated_ properties, not copied.
 
 #### state.isChanged()
 
