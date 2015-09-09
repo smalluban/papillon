@@ -1,8 +1,10 @@
+import KeyMap from './KeyMap';
+
 const map = new WeakMap();
 let timestamp = 0;
 let request = false;
 
-export default class State {
+class State {
 
   static now() {
     if (!request) {
@@ -32,18 +34,21 @@ export default class State {
     if (!State.isObject(target)) {
       throw new TypeError('Invalid arguments');
     }
-    let state = map.get(target);
+    const state = map.get(target);
     if (state) { return state; }
     map.set(target, this);
 
+    const keyMap = new KeyMap();
     this.cache = Object.keys(target).reduce((cache, key)=> {
       let value = cache[key] = target[key];
       if (State.isObject(value)) {
         new State(value);
       }
+      keyMap.set(value, key);
       return cache;
     }, {});
 
+    this.keyMap = keyMap;
     this.target = target;
     this.lastCheck = State.now();
     this.lastChange = 0;
@@ -66,8 +71,9 @@ export default class State {
         }
       });
 
+      const keyMap = new KeyMap();
       this.cache = Object.keys(this.target).reduce((cache, key)=> {
-        let value = this.target[key];
+        const value = this.target[key];
 
         if (!this.cache.hasOwnProperty(key)) {
           this.changelog[key] = { type:'set' };
@@ -89,9 +95,19 @@ export default class State {
           }
         }
 
-        cache[key] = this.target[key];
+        if (this.changelog[key]) {
+          const oldKey = this.keyMap.shift(value, key);
+          if (oldKey && oldKey !== key && this.target[oldKey] !== value) {
+            this.changelog[key].oldKey = oldKey;
+          }
+        }
+
+        cache[key] = value;
+        keyMap.set(value, key);
         return cache;
       }, {});
+
+      this.keyMap = keyMap;
 
       if (changed) {
         this.lastChange = this.lastCheck;
@@ -103,3 +119,5 @@ export default class State {
     return this.lastChange === timestamp;
   }
 }
+
+export default State;

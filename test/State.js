@@ -61,7 +61,8 @@ describe('State', ()=> {
 
     describe('changelog property', ()=> {
       it('contains `delete` type', (done)=> {
-        let obj = {one: 'one'}, state = new State(obj);
+        let obj = {one: 'one'};
+        let state = new State(obj);
         delete obj.one;
 
         window.requestAnimationFrame(()=> {
@@ -87,7 +88,8 @@ describe('State', ()=> {
       });
 
       it('contains `set` type for object value', (done)=> {
-        let obj = {}, state = new State(obj);
+        let obj = {};
+        let state = new State(obj);
 
         window.requestAnimationFrame(()=> {
           obj.one = { two: 'three' };
@@ -101,7 +103,8 @@ describe('State', ()=> {
       });
 
       it('contains `modify` type for object value', (done)=> {
-        let obj = { one: { two: null } }, state = new State(obj);
+        let obj = { one: { two: null } };
+        let state = new State(obj);
 
         window.requestAnimationFrame(()=> {
           obj.one.two = 'three';
@@ -112,6 +115,71 @@ describe('State', ()=> {
             } }
           });
           done();
+        });
+      });
+
+      describe('`oldKey` parameter', ()=> {
+        let obj, state;
+
+        beforeEach(()=> {
+          obj = { a: 'a', b: 'a', c: {}, d: 4};
+          state = new State(obj);
+        });
+
+        it('is undefined for no relocated property', (done)=> {
+          window.requestAnimationFrame(()=> {
+            obj.a = 'b';
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog.a.oldKey).toEqual(undefined);
+            done();
+          });
+        });
+
+        it('has old name for relocated property', (done)=> {
+          window.requestAnimationFrame(()=> {
+            Object.assign(obj, { a: 4, d: 'a'});
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog.a.oldKey).toEqual('d');
+            expect(state.changelog.d.oldKey).toEqual('a');
+            done();
+          });
+        });
+
+        it('works with array object', (done)=> {
+          const array = ['a', 'b', 'b', {}];
+          const state = new State(array);
+
+          window.requestAnimationFrame(()=> {
+            array[0] = 'b';
+            array[1] = array[3];
+            array[2] = 'a';
+
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog[0].oldKey).toEqual("1");
+            expect(state.changelog[1].oldKey).toEqual(undefined);
+            expect(state.changelog[2].oldKey).toEqual("0");
+
+            done();
+          });
+        });
+
+        it('works with resorted array object', (done)=> {
+          const array = ['b','a','c','a'];
+          const state = new State(array);
+
+          window.requestAnimationFrame(()=> {
+            array.length = 0;
+            array.push(...['a','b','a','b','a']);
+
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog[0].oldKey).toEqual("1");
+            expect(state.changelog[1].oldKey).toEqual("0");
+            expect(state.changelog[2].oldKey).toEqual("3");
+            expect(state.changelog[3].oldKey).toEqual(undefined);
+            expect(state.changelog[4].oldKey).toEqual(undefined);
+
+            done();
+          });
         });
       });
     });
