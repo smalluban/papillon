@@ -128,7 +128,7 @@ describe('State', ()=> {
 
         it('is undefined for no relocated property', (done)=> {
           window.requestAnimationFrame(()=> {
-            obj.a = 'b';
+            obj.a = 4;
             expect(state.isChanged()).toEqual(true);
             expect(state.changelog.a.oldKey).toEqual(undefined);
             done();
@@ -178,6 +178,37 @@ describe('State', ()=> {
             expect(state.changelog[3].oldKey).toEqual(undefined);
             expect(state.changelog[4].oldKey).toEqual(undefined);
 
+            done();
+          });
+        });
+      });
+
+      describe('`newKey` parameter', ()=> {
+        let obj, state;
+
+        beforeEach(()=> {
+          obj = { a: 1, b: 2, c: 3};
+          state = new State(obj);
+        });
+
+        it('is set for after relocation', (done)=> {
+          window.requestAnimationFrame(()=> {
+            obj.a = 0;
+            obj.c = 1;
+
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog.a.newKey).toEqual('c');
+            done();
+          });
+        });
+
+        it('is set for before relocation', (done)=> {
+          window.requestAnimationFrame(()=> {
+            obj.a = 3;
+            obj.c = 0;
+
+            expect(state.isChanged()).toEqual(true);
+            expect(state.changelog.c.newKey).toEqual('a');
             done();
           });
         });

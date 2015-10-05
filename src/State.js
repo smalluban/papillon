@@ -72,6 +72,7 @@ class State {
       });
 
       const keyMap = new KeyMap();
+      const cacheNewKeys = {};
       this.cache = Object.keys(this.target).reduce((cache, key)=> {
         const value = this.target[key];
 
@@ -99,6 +100,15 @@ class State {
           const oldKey = this.keyMap.shift(value, key);
           if (oldKey && oldKey !== key && this.target[oldKey] !== value) {
             this.changelog[key].oldKey = oldKey;
+            if (this.changelog[oldKey]) {
+              this.changelog[oldKey].newKey = key;
+            } else {
+              cacheNewKeys[oldKey] = key;
+            }
+          }
+
+          if (cacheNewKeys[key]) {
+            this.changelog[key].newKey = cacheNewKeys[key];
           }
         }
 
