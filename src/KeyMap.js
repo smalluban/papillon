@@ -4,17 +4,17 @@ class KeyMap {
     }
 
     set(key, value) {
-      let set = this.map.get(key);
-      if (!set) {
-        set = new Set();
-        this.map.set(key, set);
+      let list = this.map.get(key);
+      if (!list) {
+        list = new Set();
+        this.map.set(key, list);
       }
 
       if (value) {
-        set.add(value);
+        list.add(value);
       }
 
-      return set;
+      return list;
     }
 
     shift(key, value) {
