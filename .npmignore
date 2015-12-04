@@ -1,0 +1,13 @@
+# Tests
+/test
+.travis.yml
+karma.conf.js
+karma-cov.conf.js
+
+# Dev
+.jshintrc
+webpack.config.js
+
+# Other
+bower.json
+.gitignore
