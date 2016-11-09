@@ -5,7 +5,7 @@ karma.conf.js
 karma-cov.conf.js
 
 # Dev
-.jshintrc
+.eslintrc
 webpack.config.js
 
 # Other

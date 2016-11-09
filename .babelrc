@@ -1,0 +1,18 @@
+{
+  "presets": ["es2015"],
+  "plugins": [
+    "add-module-exports",
+    "transform-class-properties",
+  ],
+  "env": {
+    "test": {
+      "plugins": [
+        ["istanbul", {
+          "include": [
+            "lib/**/*.js"
+          ]
+        }]
+      ]
+    }
+  }
+}

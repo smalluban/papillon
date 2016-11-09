@@ -1,20 +1,31 @@
-var webpack = require('webpack');
+const webpack = require('webpack'); /* eslint import/no-extraneous-dependencies: 0 */
 
 module.exports = {
-  entry: "./papillon",
+  entry: {
+    './dist/papillon.js': './papillon.js',
+    './dist/papillon.min.js': './papillon.js',
+  },
   output: {
-    path: "./dist/",
-    libraryTarget: "umd",
-    library: "papillon",
-    filename: "papillon.js"
+    path: './',
+    filename: '[name]',
+    libraryTarget: 'umd',
+    library: 'papillon',
+    sourceMapFilename: '[file].map',
   },
   module: {
     loaders: [
-      { test: /\.js$/, loader: 'babel' }
-    ]
+      {
+        test: /\.js$/,
+        loaders: ['babel', 'eslint'],
+      },
+    ],
   },
   plugins: [
-    new webpack.optimize.UglifyJsPlugin({compress: { warnings: false }})
+    new webpack.optimize.UglifyJsPlugin({
+      include: /\.min\.js$/,
+      minimize: true,
+      mangle: false,
+    }),
   ],
-  devtool: '#source-map'
+  devtool: 'source-map',
 };

@@ -27,9 +27,7 @@ class Observer {
       throw new TypeError('Invalid arguments');
     }
 
-    this.callback = callback;
     this.revert = [];
-
     this.state = new State(
       [].concat(keys).reduce( (list, key) => {
         let observer = new PropertyObserver(host, key);
@@ -47,24 +45,20 @@ class Observer {
         return list;
       }, {})
     );
+
+    this.callback = () => {
+      if (this.state.isChanged()) {
+        callback(this.state.changelog);
+      }
+    };
   }
 
   check() {
-    if (!this.checkFn) {
-      this.checkFn = Observer.requestAnimationFrame(()=> {
-        if (this.state.isChanged()) {
-          this.callback(this.state.changelog);
-        }
-
-        this.checkFn = undefined;
-      });
-    }
+    Observer.requestAnimationFrame(this.callback);
   }
 
   destroy() {
-    if (this.checkFn) {
-      Observer.cancelAnimationFrame(this.checkFn);
-    }
+    Observer.cancelAnimationFrame(this.callback);
 
     this.revert.forEach(cb => cb());
   }

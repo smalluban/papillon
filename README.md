@@ -15,10 +15,9 @@ between repaints and provides the difference between these states.
 
 ```bash
 npm install papillon
-bower install papillon
 ```
 
-Packages contain built version of the library. They work with all major
+Package contains built version of the library. It works with all major
 package managers and global browser context.
 
 ```javascript
@@ -92,8 +91,8 @@ Params:
 * `delete` - Deleted property.
 * `modify` - Nested changes of `Object` property in `changelog`.
 * `oldValue` - Property value from last state.
-* `oldKey` - Property key from last state which value was moved to this property. 
-    Paremeter is set only when new value of old property has changed. In another 
+* `oldKey` - Property key from last state which value was moved to this property.
+    Paremeter is set only when new value of old property has changed. In another
     words, it is set only for _relocated_ properties, not copied.
 
 #### state.isChanged()
