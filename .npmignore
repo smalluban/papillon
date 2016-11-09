@@ -1,8 +1,8 @@
 # Tests
 /test
+/coverage
 .travis.yml
 karma.conf.js
-karma-cov.conf.js
 
 # Dev
 .eslintrc
