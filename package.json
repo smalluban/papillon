@@ -5,7 +5,7 @@
   "main": "dist/papillon.js",
   "scripts": {
     "karma": "NODE_ENV=test karma start",
-    "test": "npm run karma -- --single-run",
+    "test": "npm run karma -- --single-run --browsers Firefox",
     "dev": "npm run karma",
     "build": "webpack",
     "prebuild": "npm test",
@@ -43,6 +43,7 @@
     "karma": "^1.3.0",
     "karma-chrome-launcher": "^2.0.0",
     "karma-coverage": "^1.1.1",
+    "karma-firefox-launcher": "^1.0.0",
     "karma-jasmine": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.7.0",

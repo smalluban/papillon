@@ -111,7 +111,7 @@ describe('Observer', () => {
       host.one = 'new value';
       window.requestAnimationFrame(() => {
         expect(spy).toHaveBeenCalledWith({
-          one: { type: 'set', oldValue: 'two' }
+          one: { type: 'set', oldValue: 'two' },
         });
         done();
       });

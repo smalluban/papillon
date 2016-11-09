@@ -1,7 +1,7 @@
 import PropertyObserver from '../src/PropertyObserver';
 
 describe('PropertyObserver', () => {
-  let host
+  let host;
   let observer;
   let spy;
 
