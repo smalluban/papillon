@@ -1,24 +1,27 @@
 import State from './State';
 import PropertyObserver from './PropertyObserver';
 
+let request;
+let callbacks;
+
 class Observer {
   static requestAnimationFrame(cb) {
-    if (!this._request) {
-      this._callbacks = new Set().add(cb);
-      this._request = window.requestAnimationFrame(()=> {
-        this._callbacks.forEach(cb => cb());
-        this._request = this._callbacks = undefined;
+    if (!request) {
+      callbacks = new Set().add(cb);
+      request = window.requestAnimationFrame(() => {
+        callbacks.forEach(c => c());
+        request = callbacks = undefined;
       });
     } else {
-      this._callbacks.add(cb);
+      callbacks.add(cb);
     }
 
     return cb;
   }
 
   static cancelAnimationFrame(cb) {
-    if (this._callbacks) {
-      this._callbacks.delete(cb);
+    if (callbacks) {
+      callbacks.delete(cb);
     }
   }
 
@@ -29,11 +32,11 @@ class Observer {
 
     this.revert = [];
     this.state = new State(
-      [].concat(keys).reduce( (list, key) => {
-        let observer = new PropertyObserver(host, key);
+      [].concat(keys).reduce((list, key) => {
+        const observer = new PropertyObserver(host, key);
         list[key] = host[key];
 
-        this.revert.push(observer.observe((value)=> {
+        this.revert.push(observer.observe(value => {
           if (!State.is(list[key], value)) {
             list[key] = value;
             this.check();

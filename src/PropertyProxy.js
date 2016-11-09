@@ -7,7 +7,7 @@ class PropertyProxy {
   }
 
   getOwnDescriptor() {
-    let desc = Object.getOwnPropertyDescriptor(this.host, this.key);
+    const desc = Object.getOwnPropertyDescriptor(this.host, this.key);
 
     if (desc) {
       if (!desc.configurable) {
@@ -24,9 +24,10 @@ class PropertyProxy {
   }
 
   getProtoDescriptor() {
-    let desc, host = Object.getPrototypeOf(this.host);
+    let host = Object.getPrototypeOf(this.host);
+    let desc;
 
-    while(host) {
+    while (host) {
       desc = Object.getOwnPropertyDescriptor(host, this.key);
       if (desc) {
         break;
@@ -37,13 +38,13 @@ class PropertyProxy {
 
     if (desc) {
       if (!desc.get && !desc.set) {
-        desc.get = ()=> {
+        desc.get = () => {
           delete this.host[this.key];
-          let value = this.host[this.key];
+          const value = this.host[this.key];
           this.on();
           return value;
         };
-        desc.set = (newVal)=> {
+        desc.set = newVal => {
           delete this.host[this.key];
           this.host[this.key] = newVal;
           this.on();
@@ -70,7 +71,7 @@ class PropertyProxy {
       desc = {
         enumerable: true,
         writable: true,
-        configurable: true
+        configurable: true,
       };
     }
 
@@ -81,7 +82,7 @@ class PropertyProxy {
       configurable: true,
       enumerable: this.desc.enumerable,
       get: this.get.bind(this),
-      set: this.set.bind(this)
+      set: this.set.bind(this),
     });
   }
 

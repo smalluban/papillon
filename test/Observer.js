@@ -1,46 +1,46 @@
-import { Observer } from '../papillon';
-import { State } from '../papillon';
+import { Observer, State } from '../papillon';
 
-describe('Observer', ()=>{
-
-  describe('constructor', ()=> {
-    it('throw error for invalid arguments', ()=> {
-      expect(()=> new Observer()).toThrow();
-      expect(()=> new Observer({})).toThrow();
-      expect(()=> new Observer({}, 'one')).toThrow();
-      expect(()=> new Observer(undefined, 'one', ()=> {})).toThrow();
+describe('Observer', () => {
+  describe('constructor', () => {
+    it('throw error for invalid arguments', () => {
+      expect(() => new Observer()).toThrow();
+      expect(() => new Observer({})).toThrow();
+      expect(() => new Observer({}, 'one')).toThrow();
+      expect(() => new Observer(undefined, 'one', () => {})).toThrow();
     });
 
-    it('throw error for non-configurable properties', ()=> {
-      let host = {};
+    it('throw error for non-configurable properties', () => {
+      const host = {};
       Object.defineProperty(host, 'one', {
-        value: 'test'
+        value: 'test',
       });
-      expect(()=> new Observer(host, 'one', ()=> {})).toThrow();
+      expect(() => new Observer(host, 'one', () => {})).toThrow();
     });
   });
 
-  describe('observe changes with host object', ()=> {
-    let host, list, value;
+  describe('observe changes with host object', () => {
+    let host;
+    let list;
+    let value;
 
-    beforeEach(()=> {
+    beforeEach(() => {
       value = 'one';
       host = {
         one: 'one',
         get two() { return value; },
-        set two(newVal) { value = newVal; }
+        set two(newVal) { value = newVal; },
       };
-      let observer = new Observer(host, ['one', 'two'], ()=> {});
+      const observer = new Observer(host, ['one', 'two'], () => {});
       list = observer.state.target;
     });
 
-    it('link watched property to list object', ()=> {
+    it('link watched property to list object', () => {
       expect(list.one).toEqual('one');
       host.one = 'new value';
       expect(list.one).toEqual('new value');
     });
 
-    it('link watched getter/setter property to list object', ()=> {
+    it('link watched getter/setter property to list object', () => {
       expect(host.two).toEqual('one');
       expect(list.two).toEqual('one');
       host.two = 'new value';
@@ -49,65 +49,67 @@ describe('Observer', ()=>{
     });
   });
 
-  describe('check method', ()=> {
-    let host, observer;
+  describe('check method', () => {
+    let host;
+    let observer;
 
-    beforeEach(()=> {
+    beforeEach(() => {
       host = { one: 'two', two: {} };
       Object.defineProperty(host, 'three', {
-        get: ()=> Math.random(),
-        configurable: true
+        get: () => Math.random(),
+        configurable: true,
       });
-      observer = new Observer(host, ['one', 'two', 'three'], ()=> {});
+      observer = new Observer(host, ['one', 'two', 'three'], () => {});
       spyOn(observer, 'check');
     });
 
-    it('is called when setting new value', ()=> {
+    it('is called when setting new value', () => {
       host.one = 'new value';
       expect(observer.check).toHaveBeenCalled();
     });
 
-    it('is not called when getting primitive watched property', ()=> {
-      host.one;
+    it('is not called when getting primitive watched property', () => {
+      host.one; // eslint-disable-line
       expect(observer.check).not.toHaveBeenCalled();
     });
 
-    it('is called when getting object watched property', ()=> {
-      host.two;
+    it('is called when getting object watched property', () => {
+      host.two; // eslint-disable-line
       expect(observer.check).toHaveBeenCalled();
     });
 
-    it('is called for computed property with return new value', ()=> {
+    it('is called for computed property with return new value', () => {
       host.three = 'new value';
       expect(observer.check).toHaveBeenCalled();
     });
 
-    it('is called for computed property with return new value', ()=> {
-      host.three;
+    it('is called for computed property with return new value', () => {
+      host.three; // eslint-disable-line
       expect(observer.check).toHaveBeenCalled();
     });
   });
 
-  describe('callback', ()=> {
-    let host, spy;
+  describe('callback', () => {
+    let host;
+    let spy;
 
-    beforeEach(()=> {
-      host = { one: 'two'};
+    beforeEach(() => {
+      host = { one: 'two' };
       spy = jasmine.createSpy('spy');
-      new Observer(host, 'one', spy);
+      new Observer(host, 'one', spy); // eslint-disable-line
     });
 
-    it('called when property changed before next repaint', (done)=> {
+    it('called when property changed before next repaint', (done) => {
       host.one = 'new value';
-      window.requestAnimationFrame(()=> {
+      window.requestAnimationFrame(() => {
         expect(spy).toHaveBeenCalled();
         done();
       });
     });
 
-    it('called with proper changelog', (done)=> {
+    it('called with proper changelog', (done) => {
       host.one = 'new value';
-      window.requestAnimationFrame(()=> {
+      window.requestAnimationFrame(() => {
         expect(spy).toHaveBeenCalledWith({
           one: { type: 'set', oldValue: 'two' }
         });
@@ -115,31 +117,34 @@ describe('Observer', ()=>{
       });
     });
 
-    it('not called when not watched property changed', (done)=> {
+    it('not called when not watched property changed', (done) => {
       host.two = 'new value';
-      window.requestAnimationFrame(()=> {
+      window.requestAnimationFrame(() => {
         expect(spy).not.toHaveBeenCalled();
         done();
       });
     });
   });
 
-  describe('destroy', ()=> {
-    let host, observer, getter, spy;
+  describe('destroy', () => {
+    let host;
+    let observer;
+    let getter;
+    let spy;
 
-    beforeEach(()=> {
-      getter = ()=> 'one';
-      host = { one: 'one'};
+    beforeEach(() => {
+      getter = () => 'one';
+      host = { one: 'one' };
       spy = jasmine.createSpy('callback');
       Object.defineProperty(host, 'two', {
         get: getter,
         set: getter,
-        configurable: true
+        configurable: true,
       });
       observer = new Observer(host, ['one', 'two'], spy);
     });
 
-    it('revert property to original definition', ()=> {
+    it('revert property to original definition', () => {
       let desc = Object.getOwnPropertyDescriptor(host, 'one');
       expect(desc.get).toBeDefined();
       observer.destroy();
@@ -147,81 +152,80 @@ describe('Observer', ()=>{
       expect(desc.get).not.toBeDefined();
     });
 
-    it('revert property with actual value', ()=> {
+    it('revert property with actual value', () => {
       host.one = 'two';
       observer.destroy();
       expect(host.one).toEqual('two');
     });
 
-    it('revert property getter/setter methods', ()=> {
+    it('revert property getter/setter methods', () => {
       observer.destroy();
-      let desc = Object.getOwnPropertyDescriptor(host, 'two');
+      const desc = Object.getOwnPropertyDescriptor(host, 'two');
       expect(desc.get).toEqual(getter);
     });
 
-    it('cancel callback call', (done)=> {
+    it('cancel callback call', (done) => {
       host.one = 'two';
       observer.destroy();
-      window.requestAnimationFrame(()=> {
+      window.requestAnimationFrame(() => {
         expect(spy).not.toHaveBeenCalled();
         done();
       });
     });
-
   });
 
-  describe('with multiply instances', ()=> {
-    let host, spy, observer1, observer2;
+  describe('with multiply instances', () => {
+    let host;
+    let spy;
+    let observer1;
+    let observer2;
 
-    beforeEach(()=> {
+    beforeEach(() => {
       host = { one: 'two' };
       spy = jasmine.createSpy('callback');
-      observer1 = new Observer(host, 'one', ()=> {});
+      observer1 = new Observer(host, 'one', () => {});
       observer2 = new Observer(host, 'one', spy);
     });
 
-    it('work after destroying one of them', (done)=> {
+    it('work after destroying one of them', (done) => {
       observer1.destroy();
       host.one = 'three';
-      window.requestAnimationFrame(()=> {
+      window.requestAnimationFrame(() => {
         expect(spy).toHaveBeenCalled();
         done();
       });
     });
 
-    it('revert to original state before observing', ()=> {
+    it('revert to original state before observing', () => {
       observer1.destroy();
       observer2.destroy();
       expect(Object.getOwnPropertyDescriptor(host, 'one')).toEqual({
         writable: true,
         enumerable: true,
         configurable: true,
-        value: 'two'
+        value: 'two',
       });
     });
   });
 
-  describe('nested observers', ()=> {
-
-    it('callback in the same animation frame',(done)=> {
-      let frame1, frame2;
+  describe('nested observers', () => {
+    it('callback in the same animation frame', (done) => {
+      let frame1;
+      let frame2;
       const host = {};
 
-      const observer1 = new Observer(host, 'test1', ()=> {
+      new Observer(host, 'test1', () => { // eslint-disable-line
         frame1 = State.now();
         expect(frame1).toEqual(frame2);
         done();
       });
 
-      const observer2 = new Observer(host, 'test2', ()=> {
+      new Observer(host, 'test2', () => { // eslint-disable-line
         frame2 = State.now();
         host.test1 = 'new value';
       });
 
       host.test2 = 'new value';
-
     });
-
-
   });
 });

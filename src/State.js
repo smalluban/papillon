@@ -1,19 +1,18 @@
 import KeyMap from './KeyMap';
 
 const map = new WeakMap();
-let timestamp = 0;
+let globalTimestamp = 0;
 let request = false;
 
 class State {
-
   static now() {
     if (!request) {
-      timestamp = timestamp + 1;
+      globalTimestamp = globalTimestamp + 1;
       request = window.requestAnimationFrame(
-        ()=> request = undefined
+        () => { request = undefined; }
       );
     }
-    return timestamp;
+    return globalTimestamp;
   }
 
   static isObject(target) {
@@ -24,8 +23,8 @@ class State {
     if (v1 === 0 && v2 === 0) {
       return 1 / v1 === 1 / v2;
     }
-    if (v1 !== v1) {
-      return v2 !== v2;
+    if (v1 !== v1) {  // eslint-disable-line
+      return v2 !== v2; // eslint-disable-line
     }
     return v1 === v2;
   }
@@ -39,10 +38,10 @@ class State {
     map.set(target, this);
 
     const keyMap = new KeyMap();
-    this.cache = Object.keys(target).reduce((cache, key)=> {
-      let value = cache[key] = target[key];
+    this.cache = Object.keys(target).reduce((cache, key) => {
+      const value = cache[key] = target[key];
       if (State.isObject(value)) {
-        new State(value);
+        new State(value); // eslint-disable-line
       }
       keyMap.set(value, key);
       return cache;
@@ -52,10 +51,12 @@ class State {
     this.target = target;
     this.lastCheck = State.now();
     this.lastChange = 0;
+
+    return this;
   }
 
   isChanged() {
-    let timestamp = State.now();
+    const timestamp = State.now();
 
     if (timestamp > this.lastCheck) {
       let changed = false;
@@ -63,9 +64,9 @@ class State {
       this.lastCheck = timestamp;
       this.changelog = {};
 
-      Object.keys(this.cache).forEach((key)=> {
-        if (!this.target.hasOwnProperty(key)) {
-          let value = this.cache[key];
+      Object.keys(this.cache).forEach(key => {
+        if (!{}.hasOwnProperty.call(this.target, key)) {
+          const value = this.cache[key];
           this.changelog[key] = { type: 'delete', oldValue: value };
           changed = true;
         }
@@ -73,20 +74,20 @@ class State {
 
       const keyMap = new KeyMap();
       const cacheNewKeys = {};
-      this.cache = Object.keys(this.target).reduce((cache, key)=> {
+      this.cache = Object.keys(this.target).reduce((cache, key) => {
         const value = this.target[key];
 
-        if (!this.cache.hasOwnProperty(key)) {
-          this.changelog[key] = { type:'set' };
+        if (!{}.hasOwnProperty.call(this.cache, key)) {
+          this.changelog[key] = { type: 'set' };
           changed = true;
         } else if (!State.is(value, this.cache[key])) {
-          this.changelog[key] = this.changelog[key] || { type: 'set'};
+          this.changelog[key] = this.changelog[key] || { type: 'set' };
           this.changelog[key].oldValue = this.cache[key];
           changed = true;
         }
 
         if (State.isObject(value)) {
-          let nestedState = new State(value);
+          const nestedState = new State(value);
           if (nestedState.isChanged()) {
             changed = true;
             if (!this.changelog[key]) {
