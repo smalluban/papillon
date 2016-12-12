@@ -1,6 +1,14 @@
 import KeyMap from './KeyMap';
 
-const map = new WeakMap();
+const MAP_NAME = '__papillon_state_map__';
+
+if (!{}.hasOwnProperty.call(window, MAP_NAME)) {
+  Object.defineProperty(window, MAP_NAME, { value: new WeakMap() });
+} else if (!(window[MAP_NAME] instanceof WeakMap)) {
+  throw new ReferenceError(`window.${MAP_NAME} already defined`);
+}
+
+const map = window[MAP_NAME];
 let globalTimestamp = 0;
 let request = false;
 
