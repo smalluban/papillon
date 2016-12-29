@@ -1,7 +1,10 @@
 {
   "name": "papillon",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "Change detection library",
+  "webpack": "papillon.js",
+  "module": "papillon.js",
+  "jsnext:main": "papillon.js",
   "main": "dist/papillon.js",
   "scripts": {
     "karma": "NODE_ENV=test karma start",
