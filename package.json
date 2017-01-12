@@ -1,16 +1,16 @@
 {
   "name": "papillon",
-  "version": "1.5.7",
+  "version": "1.5.9",
   "description": "Change detection library",
-  "webpack": "papillon.js",
-  "module": "papillon.js",
-  "jsnext:main": "papillon.js",
-  "main": "dist/papillon.js",
+  "jsnext:main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
-    "karma": "NODE_ENV=test karma start",
-    "test": "npm run karma -- --single-run --browsers Firefox",
-    "dev": "npm run karma",
-    "build": "webpack",
+    "dev": "karma start",
+    "dev:coverage": "NODE_ENV=coverage karma start",
+    "test": "npm run dev -- --single-run --browsers Firefox",
+    "dist": "rm -rf ./dist && webpack",
+    "babel": "rm -rf ./lib && babel ./src -d ./lib -s inline",
+    "build": "npm run dist && npm run babel",
     "prebuild": "npm test",
     "prepublish": "npm run build"
   },
@@ -19,8 +19,12 @@
     "url": "https://github.com/smalluban/papillon"
   },
   "keywords": [
+    "Object.observe",
+    "observe",
+    "objects",
     "change detection",
     "data binding",
+    "state",
     "papillon"
   ],
   "author": "Dominik Lubański <dominik.lubanski@gmail.com>",
@@ -30,6 +34,7 @@
   },
   "homepage": "https://github.com/smalluban/papillon",
   "devDependencies": {
+    "babel-cli": "^6.18.0",
     "babel-core": "^6.7.6",
     "babel-eslint": "^6.1.2",
     "babel-loader": "^6.2.4",

@@ -2,8 +2,8 @@ const webpack = require('webpack'); /* eslint import/no-extraneous-dependencies:
 
 module.exports = {
   entry: {
-    './dist/papillon.js': './papillon.js',
-    './dist/papillon.min.js': './papillon.js',
+    './dist/papillon.js': './src/index.js',
+    './dist/papillon.min.js': './/src/index.js',
   },
   output: {
     path: './',

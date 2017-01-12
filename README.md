@@ -17,27 +17,15 @@ between repaints and provides the difference between these states.
 npm install papillon
 ```
 
-Package contains built version of the library. It works with all major
-package managers and global browser context.
-
 ```javascript
-// load library (for example with browserify)
-let papillon = require('papillon');
-
-// load modules (works also in global context)
-let Observer = papillon.Observer;
-let State = papillon.State;
+import { Observer, State } from 'papillon';
 ```
 
-If you use ES6 load source file:
-
-```javascript
-import { Observer, State } from 'papillon/papillon';
-```
+NPM package contains UMD built version of the library in `dist/` path.
 
 ## State
 
-This module provides an singleton interface for storing state of object.
+State provides an singleton interface for storing state of object.
 Only last state and changes between this and the previous state are stored.
 
 Singleton pattern ensures low memory usage and consistent states

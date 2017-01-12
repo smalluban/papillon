@@ -1,4 +1,6 @@
 const webpackConfig = require('./webpack.config');
+const reporters = ['progress'];
+if (process.env.NODE_ENV === 'coverage') reporters.push('coverage');
 
 module.exports = (config) => {
   config.set({
@@ -24,7 +26,7 @@ module.exports = (config) => {
     webpackMiddleware: {
       stats: 'errors-only',
     },
-    reporters: ['progress', 'coverage'],
+    reporters,
     coverageReporter: {
       type: 'html',
       dir: 'coverage/',
